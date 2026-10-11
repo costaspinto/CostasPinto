@@ -9,7 +9,7 @@ import {
   Github,
 
   Linkedin,
-
+  Youtube,
   Mail,
 
   Sparkles,
@@ -40,8 +40,13 @@ import { SectionHeading } from '@/components/section-heading';
 
 import { ChatWidget } from '@/components/chat-widget';
 
+import { ResumeActions } from '@/components/resume-actions';
 import { GitHubRepositories } from '@/components/github-repositories';
 import { SiteControls } from '@/components/site-controls';
+import { BrandMark } from '@/components/brand-mark';
+import { MobileNav } from '@/components/mobile-nav';
+import { YouTubeSection } from '@/components/youtube-section';
+import { getYouTubeVideos } from '@/lib/youtube';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,13 +60,15 @@ export default async function HomePage() {
 
   ]);
 
+  const youtubeVideos = await getYouTubeVideos();
+
   return (
 
-    <main id="top" className="overflow-hidden bg-[#f8faf8] text-slate-950 selection:bg-emerald-200 selection:text-emerald-950">
+    <main id="top" className="portfolio-shell overflow-hidden bg-[#f8faf8] text-slate-950 selection:bg-emerald-200 selection:text-emerald-950">
 
       {/* Navigation */}
 
-      <nav className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/85 backdrop-blur-xl">
+      <nav className="portfolio-nav sticky top-0 z-40 border-b border-slate-200/70 bg-white/85 backdrop-blur-xl">
 
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
 
@@ -75,7 +82,7 @@ export default async function HomePage() {
 
           >
 
-            CP<span className="text-emerald-700 transition-colors group-hover:text-emerald-500">.</span>
+            <BrandMark />
 
           </a>
 
@@ -114,11 +121,13 @@ export default async function HomePage() {
 
           </div>
 
+          <MobileNav />
+
           <a
 
             href="#contact"
 
-            className="inline-flex items-center gap-2 rounded-full border border-emerald-900/15 bg-white px-4 py-2.5 text-sm font-semibold text-emerald-950 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-700 hover:bg-emerald-50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2"
+            className="hidden md:inline-flex items-center gap-2 rounded-full border border-emerald-900/15 bg-white px-4 py-2.5 text-sm font-semibold text-emerald-950 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-700 hover:bg-emerald-50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2"
 
           >
 
@@ -138,7 +147,7 @@ export default async function HomePage() {
 
         id="top"
 
-        className="relative isolate mx-auto grid max-w-7xl items-center gap-14 px-5 pb-20 pt-16 sm:px-8 sm:pb-28 sm:pt-24 md:grid-cols-[1.15fr_.85fr]"
+        className="portfolio-hero relative isolate mx-auto grid max-w-7xl items-center gap-14 px-5 pb-20 pt-16 sm:px-8 sm:pb-28 sm:pt-24 md:grid-cols-[1.15fr_.85fr]"
 
       >
 
@@ -174,24 +183,12 @@ export default async function HomePage() {
 
           </div>
 
-          <h1 className="max-w-3xl text-5xl font-black leading-[1.02] tracking-[-0.055em] text-slate-950 sm:text-6xl lg:text-7xl xl:text-[5.2rem]">
-
-            I build AI that
-
-            <br />
-
-            <span className="relative inline-block bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-600 bg-clip-text text-transparent">
-
-              does useful things.
-
-            </span>
-
+          <h1 className="max-w-3xl whitespace-pre-line text-5xl font-black leading-[1.02] tracking-[-0.055em] text-slate-950 sm:text-6xl lg:text-7xl xl:text-[5.2rem]">
+            {profile.heroTitle}
           </h1>
 
           <p className="mt-7 max-w-xl text-base leading-8 text-slate-600 sm:text-lg">
-
-            {profile.summary}
-
+            {profile.heroDescription}
           </p>
 
           <div className="mt-9 flex flex-wrap gap-3">
@@ -235,8 +232,19 @@ export default async function HomePage() {
               <ArrowUpRight size={15} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
 
             </a>
+            <a
+              href="https://www.youtube.com/@ArkByteab"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2.5 rounded-full border border-red-200 bg-white px-5 py-3.5 text-sm font-bold text-slate-800 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-red-300 hover:bg-red-50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+            >
+              <Youtube size={18} className="text-red-600" />
+              My YouTube
+              <ArrowUpRight size={15} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </a>
 
           </div>
+          <ResumeActions resumeUrl={profile.resumeUrl} />
 
           <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate-500">
 
@@ -272,7 +280,7 @@ export default async function HomePage() {
 
           />
 
-          <div className="relative overflow-hidden rounded-[2rem] border border-white/90 bg-white/95 p-6 shadow-[0_24px_80px_-32px_rgba(6,78,59,0.28)] backdrop-blur sm:p-8">
+          <div className="profile-panel relative overflow-hidden rounded-[2rem] border border-white/90 bg-white/95 p-6 shadow-[0_24px_80px_-32px_rgba(6,78,59,0.28)] backdrop-blur sm:p-8">
 
             <div
 
@@ -410,7 +418,7 @@ export default async function HomePage() {
 
             eyebrow="About me"
 
-            title="Curious by nature. Practical by design."
+            title={profile.aboutTitle}
 
             description={profile.summary}
 
@@ -675,6 +683,8 @@ export default async function HomePage() {
       {/* Searchable GitHub repositories */}
 
       <GitHubRepositories repositories={repositories} />
+
+      <YouTubeSection videos={youtubeVideos} />
 
       {/* Skills */}
 
@@ -980,7 +990,7 @@ export default async function HomePage() {
 
       <section id="contact" className="mx-auto max-w-7xl px-5 pb-10 sm:px-8">
 
-        <div className="relative isolate overflow-hidden rounded-[2rem] bg-gradient-to-br from-emerald-100 via-[#e6f3eb] to-teal-100 p-7 sm:p-12 lg:p-14">
+        <div className="contact-panel relative isolate overflow-hidden rounded-[2rem] bg-gradient-to-br from-emerald-100 via-[#e6f3eb] to-teal-100 p-7 sm:p-12 lg:p-14">
 
           <div
 
@@ -1071,6 +1081,7 @@ export default async function HomePage() {
             )}
 
           </div>
+          <ResumeActions resumeUrl={profile.resumeUrl} />
 
         </div>
 

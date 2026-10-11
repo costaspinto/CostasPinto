@@ -18,3 +18,9 @@ repository-audit-report.txt
 
 .vercel
 .env*
+.backup*/
+*.backup-*
+fix-encoding.ps1
+README-HERO-ABOUT-EDITABLE.md
+encoding-scan-report.txt
+costas-project-inventory.txt

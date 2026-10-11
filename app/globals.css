@@ -2,10 +2,371 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { color-scheme: light; }
+:root {
+  color-scheme: dark;
+  --canvas: #080d0a;
+  --surface: #101813;
+  --surface-raised: #151f18;
+  --line: rgba(206, 231, 215, 0.13);
+  --ink: #eff7f1;
+  --muted: #a5b7aa;
+  --emerald: #10b981;
+  --emerald-bright: #34d399;
+  --radius-xl: 1.5rem;
+  --shadow-soft: 0 24px 80px -36px rgba(0, 0, 0, 0.65);
+}
+
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { margin: 0; background: #f7f9f7; color: #10251d; font-family: Arial, Helvetica, sans-serif; }
+html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 a { color: inherit; text-decoration: none; }
-button, input, textarea { font: inherit; }
-::selection { background: #c7f3d9; color: #10251d; }
+button, input, textarea, select { font: inherit; }
+button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
+::selection { background: rgba(16, 185, 129, .34); color: #f5fff8; }
+:focus-visible { outline: 2px solid #34d399; outline-offset: 3px; }
+
+/* Global motion defaults. Motion is purposefully short and restrained. */
+a, button, [role="button"], input, textarea, select {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: 180ms;
+  transition-timing-function: cubic-bezier(.2, .7, .2, 1);
+}
+button:not(:disabled), [role="button"] { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes ambientFloat {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(0, -12px, 0) scale(1.035); }
+}
+@keyframes softPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, .18); }
+  50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+}
+@keyframes sheen {
+  from { transform: translateX(-120%) skewX(-18deg); }
+  to { transform: translateX(220%) skewX(-18deg); }
+}
+
+/* Scroll-reveal is progressive enhancement: content stays visible until JS opts in. */
+.motion-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .65s cubic-bezier(.2,.7,.2,1), transform .65s cubic-bezier(.2,.7,.2,1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.motion-reveal.motion-visible { opacity: 1; transform: translateY(0); }
+
+/* Brand mark derived from the CP monogram. */
+.brand-mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .12em;
+  color: #07110b;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 1000;
+  letter-spacing: -.105em;
+  line-height: 1;
+}
+.brand-mark__pixel {
+  display: inline-block;
+  width: .24em;
+  height: .24em;
+  margin-left: .08em;
+  background: #10b981;
+  flex: none;
+}
+.brand-mark--inverse { color: #f5fff8; }
+
+/* Public portfolio: graphite surfaces with emerald light. */
+.portfolio-shell {
+  isolation: isolate;
+  min-height: 100vh;
+  overflow: clip;
+  color: var(--ink) !important;
+  background:
+    radial-gradient(ellipse at 16% 4%, rgba(16, 185, 129, .09), transparent 31rem),
+    radial-gradient(ellipse at 89% 24%, rgba(5, 150, 105, .07), transparent 32rem),
+    var(--canvas) !important;
+}
+.portfolio-shell .brand-mark { color: #f3fbf5; }
+.portfolio-shell nav.portfolio-nav {
+  background: rgba(7, 12, 9, .78) !important;
+  border-color: rgba(205, 231, 214, .12) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, .12);
+}
+.portfolio-shell nav.portfolio-nav .text-slate-950 { color: #f3fbf5 !important; }
+.portfolio-shell nav.portfolio-nav .text-slate-600 { color: #b6c6bb !important; }
+.portfolio-shell nav.portfolio-nav a:hover { color: #6ee7b7 !important; }
+.portfolio-shell .portfolio-hero { position: relative; }
+.portfolio-shell .portfolio-hero .text-slate-950 { color: #f2faf4 !important; }
+.portfolio-shell .portfolio-hero .text-slate-600,
+.portfolio-shell .portfolio-hero .text-slate-500 { color: #a8b9ad !important; }
+.portfolio-shell .portfolio-hero::before,
+.portfolio-shell .portfolio-hero::after {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  border-radius: 999px;
+  filter: blur(60px);
+  animation: ambientFloat 10s ease-in-out infinite;
+}
+.portfolio-shell .portfolio-hero::before {
+  top: 8%; right: 10%; width: 19rem; height: 19rem;
+  background: rgba(16, 185, 129, .12);
+}
+.portfolio-shell .portfolio-hero::after {
+  bottom: 3%; left: 6%; width: 14rem; height: 14rem;
+  background: rgba(20, 184, 166, .08);
+  animation-delay: -4s;
+}
+.portfolio-shell .profile-panel {
+  background: linear-gradient(150deg, rgba(19, 30, 23, .97), rgba(10, 16, 12, .97)) !important;
+  border-color: rgba(185, 224, 199, .18) !important;
+  box-shadow: 0 30px 100px -35px rgba(0, 0, 0, .75), inset 0 1px rgba(255,255,255,.04) !important;
+}
+.portfolio-shell .profile-panel .text-slate-950,
+.portfolio-shell .profile-panel .text-slate-800 { color: #eff8f1 !important; }
+.portfolio-shell .profile-panel .text-slate-600,
+.portfolio-shell .profile-panel .text-slate-500,
+.portfolio-shell .profile-panel .text-slate-700 { color: #a9bcb0 !important; }
+.portfolio-shell .profile-panel .bg-slate-50 { background: #17231b !important; border-color: rgba(185,224,199,.13) !important; }
+.portfolio-shell .profile-panel .border-slate-100,
+.portfolio-shell .profile-panel .border-white\/90 { border-color: rgba(185,224,199,.13) !important; }
+.portfolio-shell .profile-panel .bg-gradient-to-bl { opacity: .2; }
+.portfolio-shell #about,
+.portfolio-shell #experience,
+.portfolio-shell #github-repositories {
+  background: rgba(14, 21, 16, .78) !important;
+  border-color: var(--line) !important;
+}
+.portfolio-shell #projects,
+.portfolio-shell #education,
+.portfolio-shell #certifications,
+.portfolio-shell #youtube { background: transparent !important; }
+.portfolio-shell #about article,
+.portfolio-shell #projects article,
+.portfolio-shell #education article,
+.portfolio-shell #experience article,
+.portfolio-shell #certifications article,
+.portfolio-shell #github-repositories article,
+.portfolio-shell #youtube article {
+  background: linear-gradient(145deg, rgba(19, 29, 22, .92), rgba(13, 20, 15, .96)) !important;
+  border-color: rgba(190, 225, 202, .15) !important;
+  box-shadow: 0 12px 32px rgba(0,0,0,.12);
+  backdrop-filter: blur(12px);
+}
+.portfolio-shell #about article:hover,
+.portfolio-shell #projects article:hover,
+.portfolio-shell #education article:hover,
+.portfolio-shell #experience article:hover,
+.portfolio-shell #certifications article:hover,
+.portfolio-shell #github-repositories article:hover,
+.portfolio-shell #youtube article:hover {
+  border-color: rgba(52, 211, 153, .5) !important;
+  box-shadow: 0 24px 55px rgba(0,0,0,.3), 0 0 0 1px rgba(16,185,129,.05);
+}
+.portfolio-shell #about h2,
+.portfolio-shell #projects h2,
+.portfolio-shell #education h2,
+.portfolio-shell #experience h2,
+.portfolio-shell #certifications h2,
+.portfolio-shell #github-repositories h2,
+.portfolio-shell #youtube h2,
+.portfolio-shell #contact h2,
+.portfolio-shell .profile-panel h2 { color: #f0f8f2 !important; }
+.portfolio-shell #about .text-slate-950,
+.portfolio-shell #projects .text-slate-950,
+.portfolio-shell #education .text-slate-950,
+.portfolio-shell #experience .text-slate-950,
+.portfolio-shell #certifications .text-slate-950,
+.portfolio-shell #github-repositories .text-slate-950,
+.portfolio-shell #youtube .text-slate-950,
+.portfolio-shell #contact .text-slate-950 { color: #edf6ef !important; }
+.portfolio-shell #about .text-slate-600,
+.portfolio-shell #projects .text-slate-600,
+.portfolio-shell #education .text-slate-600,
+.portfolio-shell #experience .text-slate-600,
+.portfolio-shell #certifications .text-slate-600,
+.portfolio-shell #github-repositories .text-slate-600,
+.portfolio-shell #youtube .text-slate-600,
+.portfolio-shell #contact .text-slate-600 { color: #a8b9ad !important; }
+.portfolio-shell #about .text-slate-500,
+.portfolio-shell #projects .text-slate-500,
+.portfolio-shell #education .text-slate-500,
+.portfolio-shell #experience .text-slate-500,
+.portfolio-shell #certifications .text-slate-500,
+.portfolio-shell #github-repositories .text-slate-500,
+.portfolio-shell #youtube .text-slate-500,
+.portfolio-shell #contact .text-slate-500 { color: #91a398 !important; }
+.portfolio-shell #projects article .bg-slate-50,
+.portfolio-shell #github-repositories article .bg-slate-50,
+.portfolio-shell #youtube article .bg-slate-100 { background: #1a251e !important; }
+.portfolio-shell #projects article .border-slate-100,
+.portfolio-shell #projects article .border-slate-200,
+.portfolio-shell #github-repositories article .border-slate-200 { border-color: rgba(190,225,202,.15) !important; }
+.portfolio-shell #github-repositories label,
+.portfolio-shell #github-repositories select {
+  border-color: rgba(190,225,202,.2) !important;
+  background: #101813 !important;
+  color: #edf6ef !important;
+}
+.portfolio-shell #github-repositories input { color: #edf6ef !important; }
+.portfolio-shell #github-repositories input::placeholder { color: #71877a !important; }
+.portfolio-shell #github-repositories button { color: #eaf7ee; border-color: rgba(190,225,202,.25); }
+.portfolio-shell #github-repositories button:hover { background: #d1fae5; color: #082014; }
+.portfolio-shell #contact .contact-panel {
+  border: 1px solid rgba(110, 231, 183, .2);
+  background: radial-gradient(ellipse at 92% 2%, rgba(16,185,129,.17), transparent 28rem), linear-gradient(135deg, #14251a, #0b120d 66%, #10281b) !important;
+  box-shadow: 0 28px 90px -40px rgba(0,0,0,.85), inset 0 1px rgba(255,255,255,.04);
+}
+.portfolio-shell #contact .contact-panel > p:first-of-type { color: #6ee7b7 !important; }
+.portfolio-shell #contact .contact-panel > p:not(:first-of-type) { color: #aec0b3 !important; }
+.portfolio-shell #contact .contact-panel a { box-shadow: 0 8px 24px rgba(0,0,0,.15); }
+.portfolio-shell footer { border-color: var(--line); color: #7f9386 !important; }
+.portfolio-shell footer a:hover { color: #6ee7b7 !important; }
+.portfolio-shell .text-ink { color: #eff7f1 !important; }
+.portfolio-shell .text-forest { color: #6ee7b7 !important; }
+.portfolio-shell .bg-paper { background: var(--surface) !important; }
+.portfolio-shell [class*="rounded-2xl"][class*="border"],
+.portfolio-shell [class*="rounded-3xl"][class*="border"] { transition: border-color .25s ease, box-shadow .25s ease, transform .25s cubic-bezier(.2,.7,.2,1); }
+.portfolio-shell a:focus-visible,
+.portfolio-shell button:focus-visible { outline-color: #6ee7b7; }
+
+/* Public certifications page shares the portfolio's visual system. */
+.certifications-page {
+  min-height: 100vh;
+  color: var(--ink) !important;
+  background: radial-gradient(ellipse at 80% 8%, rgba(16,185,129,.12), transparent 31rem), var(--canvas) !important;
+}
+.certifications-page header {
+  background: rgba(7, 12, 9, .82) !important;
+  border-color: var(--line) !important;
+}
+.certifications-page header a { color: #eaf7ee; }
+.certifications-page header a:hover { color: #6ee7b7; }
+.certifications-page .brand-mark { color: #f3fbf5; }
+.certifications-page h1,
+.certifications-page h2,
+.certifications-page h3 { color: #f0f8f2 !important; }
+.certifications-page p.text-slate-600 { color: #a8b9ad !important; }
+.certifications-page p.text-slate-500,
+.certifications-page .text-slate-400 { color: #91a398 !important; }
+.certifications-page section > .relative.overflow-hidden .inline-flex.items-center.gap-2 {
+  border-color: rgba(110,231,183,.2) !important;
+  background: rgba(255,255,255,.06) !important;
+  color: #a7f3d0 !important;
+}
+.certifications-page section > .relative.overflow-hidden {
+  border-color: rgba(110,231,183,.2) !important;
+  background: radial-gradient(ellipse at 91% 5%, rgba(16,185,129,.18), transparent 27rem), linear-gradient(135deg,#14251a,#0b120d 66%,#10281b) !important;
+  box-shadow: var(--shadow-soft);
+}
+.certifications-page article,
+.certifications-page .bg-white,
+.certifications-page .bg-white\/90,
+.certifications-page [class*="bg-white/"] {
+  border-color: rgba(190,225,202,.15) !important;
+  background: linear-gradient(145deg, rgba(19,29,22,.92), rgba(13,20,15,.96)) !important;
+}
+.certifications-page article { box-shadow: 0 12px 32px rgba(0,0,0,.12); }
+.certifications-page article:hover { border-color: rgba(52,211,153,.5) !important; box-shadow: 0 24px 55px rgba(0,0,0,.3); }
+.certifications-page .border-slate-200 { border-color: var(--line) !important; }
+
+/* Admin workspace: clean, calm, high-contrast and consistent across every screen. */
+.admin-app-shell {
+  min-height: 100vh;
+  color-scheme: light;
+  color: #15241b;
+  background:
+    radial-gradient(ellipse at 8% 2%, rgba(16,185,129,.07), transparent 27rem),
+    radial-gradient(ellipse at 94% 20%, rgba(20,184,166,.06), transparent 28rem),
+    #f3f6f4;
+}
+.admin-app-shell main { position: relative; background-color: transparent !important; }
+.admin-app-shell h1 { letter-spacing: -.04em; }
+.admin-app-shell h2, .admin-app-shell h3 { letter-spacing: -.025em; }
+.admin-app-shell article,
+.admin-app-shell section > form,
+.admin-app-shell main > div > form,
+.admin-app-shell main > form {
+  transition: border-color .22s ease, box-shadow .22s ease, transform .22s cubic-bezier(.2,.7,.2,1);
+}
+.admin-app-shell article:hover,
+.admin-app-shell section > form:hover,
+.admin-app-shell main > div > form:hover { border-color: #c2d8ca; }
+.admin-app-shell input:not([type="checkbox"]):not([type="radio"]),
+.admin-app-shell select,
+.admin-app-shell textarea {
+  border-color: #d7e1da;
+  border-radius: .85rem;
+  transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+.admin-app-shell input:not([type="checkbox"]):not([type="radio"]):focus,
+.admin-app-shell select:focus,
+.admin-app-shell textarea:focus {
+  border-color: #059669 !important;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(16,185,129,.11);
+}
+.admin-app-shell button:not(:disabled):hover,
+.admin-app-shell a[class*="inline-flex"]:hover { transform: translateY(-1px); }
+.admin-app-shell button:disabled { opacity: .65; }
+.admin-app-shell button:focus-visible,
+.admin-app-shell a:focus-visible { outline-color: #059669; }
+.admin-app-shell code { overflow-wrap: anywhere; }
+
+/* Chat surface and floating launcher. */
+#costas-ai-chat {
+  border-color: rgba(16,185,129,.25) !important;
+  box-shadow: 0 30px 100px -25px rgba(0,0,0,.58), 0 0 0 1px rgba(16,185,129,.06);
+  animation: fadeInUp .24s ease-out both;
+}
+#costas-ai-chat + button,
+button[aria-controls="costas-ai-chat"] {
+  box-shadow: 0 14px 42px -14px rgba(16,185,129,.45), 0 0 0 1px rgba(255,255,255,.09);
+}
+button[aria-controls="costas-ai-chat"]:hover { box-shadow: 0 18px 52px -14px rgba(16,185,129,.57); }
+.mobile-nav-panel { animation: fadeInUp .18s ease-out both; }
+.mobile-nav-panel a { text-decoration: none; }
+
+/* Scroll-to-top action. */
+button[aria-label="Back to top"] {
+  border: 1px solid rgba(255,255,255,.1);
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
+  animation: fadeInUp .2s ease-out both;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .portfolio-shell a[class*="rounded-full"],
+  .portfolio-shell button[class*="rounded-full"] { transition: transform .22s cubic-bezier(.2,.7,.2,1), box-shadow .22s ease, background-color .22s ease; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  .motion-reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* Standalone access/error routes use the same visual language. */
+.utility-page {
+  min-height: 100vh;
+  color: #edf6ef;
+  background: radial-gradient(ellipse at 85% 5%, rgba(16,185,129,.12), transparent 28rem), #080d0a;
+}
+.utility-page .text-slate-600 { color: #a8b9ad !important; }
+.utility-page .text-forest { color: #6ee7b7 !important; }
+.utility-page a { text-decoration: none; }
+.utility-page a:hover { color: #a7f3d0; }

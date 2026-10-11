@@ -9,7 +9,10 @@ import { createAdminClient } from '@/lib/supabase/admin';
 const profileSchema = z.object({
   full_name: z.string().trim().min(1).max(120),
   headline: z.string().trim().max(180),
-  summary: z.string().trim().max(3000),
+  hero_title: z.string().trim().min(1).max(180),
+  hero_description: z.string().trim().min(1).max(1200),
+  about_title: z.string().trim().min(1).max(180),
+  summary: z.string().trim().min(1).max(3000),
   location: z.string().trim().max(160),
   email: z.union([z.string().trim().email().max(254), z.literal('')]),
   linkedin_url: z.union([
@@ -18,6 +21,13 @@ const profileSchema = z.object({
   ]),
   github_url: z.union([
     z.string().trim().url().max(500),
+    z.literal(''),
+  ]),
+  resume_path: z.union([
+    z.string().trim().url().max(1000).refine(
+      (value) => /^https:\/\/(drive|docs)\.google\.com\//i.test(value),
+      'Enter a secure Google Drive share link.',
+    ),
     z.literal(''),
   ]),
   projects_eyebrow: z.string().trim().min(1).max(100),
@@ -55,6 +65,7 @@ export async function saveProfile(formData: FormData) {
     email: parsed.data.email || null,
     linkedin_url: parsed.data.linkedin_url || null,
     github_url: parsed.data.github_url || null,
+    resume_path: parsed.data.resume_path || null,
     slug: existing?.slug || 'main',
     avatar_url: existing?.avatar_url || null,
     is_published: true,

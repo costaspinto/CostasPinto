@@ -62,6 +62,12 @@ export type PortfolioData = {
 
   headline: string;
 
+  heroTitle: string;
+
+  heroDescription: string;
+
+  aboutTitle: string;
+
   location: string;
 
   summary: string;
@@ -73,6 +79,7 @@ export type PortfolioData = {
   projectsDescription: string;
 
   avatarUrl?: string | null;
+  resumeUrl?: string | null;
 
   email?: string | null;
 
@@ -96,6 +103,12 @@ export const fallbackProfile: PortfolioData = {
 
   headline: 'AI/ML Engineer | Generative AI | LLM Applications',
 
+  heroTitle: 'I build AI that\ndoes useful things.',
+
+  heroDescription: 'I build practical AI and machine learning applications, with a focus on generative AI, LLM-powered tools, and turning experiments into useful products.',
+
+  aboutTitle: 'Curious by nature. Practical by design.',
+
   location: 'Maharashtra, India',
 
   summary: 'I build practical AI and machine learning applications, with a focus on generative AI, LLM-powered tools, and turning experiments into useful products.',
@@ -107,6 +120,7 @@ export const fallbackProfile: PortfolioData = {
   projectsDescription: 'Explore selected AI/ML applications and featured projects.',
 
   avatarUrl: null,
+  resumeUrl: null,
 
   email: null,
 
@@ -436,7 +450,7 @@ export async function getPortfolioData(): Promise<PortfolioData> {
 
     ]);
 
-    type ProfileRecord = { full_name?: string | null; headline?: string | null; location?: string | null; summary?: string | null; projects_eyebrow?: string | null; projects_title?: string | null; projects_description?: string | null; email?: string | null; avatar_url?: string | null; linkedin_url?: string | null; github_url?: string | null };
+    type ProfileRecord = { full_name?: string | null; headline?: string | null; hero_title?: string | null; hero_description?: string | null; about_title?: string | null; location?: string | null; summary?: string | null; projects_eyebrow?: string | null; projects_title?: string | null; projects_description?: string | null; email?: string | null; avatar_url?: string | null; linkedin_url?: string | null; github_url?: string | null };
 
     type ProjectRecord = { id: string; name: string; category: string | null; description: string | null; technologies: string[] | null; repository_url: string | null; demo_url: string | null; featured: boolean | null };
 
@@ -544,6 +558,12 @@ export async function getPortfolioData(): Promise<PortfolioData> {
 
       headline: dbProfile?.headline || fallbackProfile.headline,
 
+      heroTitle: dbProfile?.hero_title || fallbackProfile.heroTitle,
+
+      heroDescription: dbProfile?.hero_description || fallbackProfile.heroDescription,
+
+      aboutTitle: dbProfile?.about_title || fallbackProfile.aboutTitle,
+
       location: dbProfile?.location || fallbackProfile.location,
 
       summary: dbProfile?.summary || fallbackProfile.summary,
@@ -557,6 +577,7 @@ export async function getPortfolioData(): Promise<PortfolioData> {
       email: dbProfile?.email || fallbackProfile.email,
 
       avatarUrl: dbProfile?.avatar_url || fallbackProfile.avatarUrl,
+      resumeUrl: (dbProfile as { resume_path?: string | null } | null)?.resume_path ?? null,
 
       links: {
 

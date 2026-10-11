@@ -20,6 +20,9 @@ export type PortfolioProfile = {
   slug: string;
   full_name: string;
   headline: string;
+  hero_title: string;
+  hero_description: string;
+  about_title: string;
   summary: string;
   location: string;
   email: string | null;

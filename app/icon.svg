@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">CP</title>
+  <rect width="64" height="64" rx="15" fill="#080D0A"/>
+  <text x="8" y="43" font-family="Arial, Helvetica, sans-serif" font-size="31" font-weight="900" letter-spacing="-3" fill="#F3FBF5">CP</text>
+  <rect x="48" y="43" width="7" height="7" fill="#10B981"/>
+</svg>

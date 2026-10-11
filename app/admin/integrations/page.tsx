@@ -8,6 +8,7 @@ import {
   Linkedin,
   RefreshCw,
   Settings2,
+  Youtube,
   ShieldCheck,
   XCircle,
 } from 'lucide-react';
@@ -43,6 +44,11 @@ type SearchParams = {
   github_fetched?: string;
   github_imported?: string;
   github_updated?: string;
+  youtube_synced?: string;
+  youtube_fetched?: string;
+  youtube_shorts?: string;
+  youtube_videos?: string;
+  youtube_error?: string;
 };
 
 export default async function IntegrationsPage({
@@ -129,6 +135,20 @@ export default async function IntegrationsPage({
           </div>
         )}
 
+
+        {params.youtube_synced === '1' && (
+          <div role="status" className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+            <p className="font-bold">YouTube sync completed.</p>
+            <p className="mt-1">Fetched {params.youtube_fetched ?? '0'} uploads | {params.youtube_shorts ?? '0'} Shorts | {params.youtube_videos ?? '0'} Videos.</p>
+          </div>
+        )}
+        {params.youtube_error && (
+          <div role="alert" className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-900">
+            {params.youtube_error === 'missing_key'
+              ? 'YouTube API key is missing. Configure YOUTUBE_API_KEY in your local and Vercel server environment, then retry.'
+              : 'YouTube sync failed. Check the server logs, API key restrictions/quota, and whether the Supabase migration has been applied.'}
+          </div>
+        )}
         {githubSyncSucceeded && (
           <div
             role="status"
@@ -278,6 +298,32 @@ export default async function IntegrationsPage({
           </div>
         </section>
 
+        <section className="mt-10">
+          <div className="mb-4">
+            <p className="text-xs font-bold uppercase tracking-[.18em] text-forest">Creator integration</p>
+            <h2 className="mt-2 text-xl font-bold">YouTube Shorts &amp; Videos</h2>
+            <p className="mt-1 text-sm text-slate-600">Sync the latest public uploads from ArkByte. Videos up to 15 seconds are grouped as Shorts; longer uploads are shown as Videos.</p>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <span className="rounded-xl bg-red-50 p-3 text-red-600"><Youtube size={24} /></span>
+                <div><h3 className="font-bold">ArkByte on YouTube</h3><p className="mt-1 text-sm text-slate-600">@ArkByteab | Latest public uploads</p></div>
+              </div>
+              <a href="https://www.youtube.com/@ArkByteab" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-red-700 hover:text-red-800">Open channel ↗</a>
+            </div>
+            <div className="mt-5 rounded-xl bg-slate-50 p-4 text-sm leading-6 text-slate-600">
+              <p className="font-semibold text-slate-800">Automatic sync</p>
+              <p className="mt-1">The integration caches recent public uploads in Supabase so your homepage does not call YouTube on every visit. Vercel is configured to refresh the list daily; use Sync Now to refresh it immediately.</p>
+              <p className="mt-2">Classification rule: 15 seconds or less = Short; anything longer defaults to Videos. Your usual longer uploads exceed one minute; any 16-60 second uploads will also appear under Videos.</p>
+            </div>
+            <form action="/api/sync/youtube" method="post" className="mt-5">
+              <button type="submit" className="inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700">
+                <Youtube size={16} /> Sync YouTube Shorts &amp; Videos
+              </button>
+            </form>
+          </div>
+        </section>
         <section className="mt-10">
           <div className="mb-4">
             <p className="text-xs font-bold uppercase tracking-[.18em] text-forest">

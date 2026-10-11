@@ -185,7 +185,7 @@ export default async function AdminPage() {
 
       description:
 
-        'Update your professional headline, biography, contact links and profile photo.',
+        'Update your professional headline, biography, contact links, profile photo and public resume link.',
 
       icon: UserRound,
 

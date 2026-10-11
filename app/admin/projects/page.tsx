@@ -1031,7 +1031,7 @@ export default async function ProjectsAdminPage({
 
                       <p className="mt-1 text-xs text-slate-500">
 
-                        {project.category || 'Project'} Â· {project.source || 'Portfolio'}
+                        {project.category || 'Project'} | {project.source || 'Portfolio'}
 
                       </p>
 

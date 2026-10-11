@@ -9,11 +9,15 @@ export const dynamic = 'force-dynamic';
 type ProfileRow = {
   full_name?: string | null;
   headline?: string | null;
+  hero_title?: string | null;
+  hero_description?: string | null;
+  about_title?: string | null;
   summary?: string | null;
   location?: string | null;
   email?: string | null;
   linkedin_url?: string | null;
   github_url?: string | null;
+  resume_path?: string | null;
   projects_eyebrow?: string | null;
   projects_title?: string | null;
   projects_description?: string | null;
@@ -39,7 +43,7 @@ export default async function ProfileAdminPage({
     const { data, error } = await db
       .from('profile')
       .select(
-        'full_name,headline,summary,location,email,linkedin_url,github_url,projects_eyebrow,projects_title,projects_description',
+        'full_name,headline,hero_title,hero_description,about_title,summary,location,email,linkedin_url,github_url,resume_path,projects_eyebrow,projects_title,projects_description',
       )
       .order('updated_at', { ascending: false })
       .limit(1)
@@ -123,7 +127,7 @@ export default async function ProfileAdminPage({
           </label>
 
           <label className="block text-sm font-semibold">
-            Headline
+            Professional tagline
             <input
               name="headline"
               maxLength={180}
@@ -133,15 +137,65 @@ export default async function ProfileAdminPage({
               }
               className={inputClass}
             />
+            <span className="mt-1 block text-xs font-normal text-slate-500">Shown in the small label above your main homepage heading.</span>
+          </label>
+
+          <div className="border-t border-slate-200 pt-6">
+            <p className="text-xs font-bold uppercase tracking-[.18em] text-forest">Homepage hero</p>
+            <h2 className="mt-2 text-xl font-bold">Main heading and introduction</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">Edit the large hero heading and its supporting paragraph separately from your About Me section. The headline uses one consistent text color on the homepage.</p>
+          </div>
+
+          <label className="block text-sm font-semibold">
+            Hero heading
+            <textarea
+              name="hero_title"
+              required
+              rows={2}
+              maxLength={180}
+              defaultValue={profile.hero_title ?? 'I build AI that\ndoes useful things.'}
+              className={`${inputClass} leading-6`}
+            />
+            <span className="mt-1 block text-xs font-normal text-slate-500">Use a new line if you want to control where the headline wraps.</span>
           </label>
 
           <label className="block text-sm font-semibold">
-            About / summary
+            Hero description
+            <textarea
+              name="hero_description"
+              required
+              rows={4}
+              maxLength={1200}
+              defaultValue={profile.hero_description ?? 'I build practical AI and machine learning applications, with a focus on generative AI, LLM-powered tools, and turning experiments into useful products.'}
+              className={`${inputClass} leading-6`}
+            />
+          </label>
+
+          <div className="border-t border-slate-200 pt-6">
+            <p className="text-xs font-bold uppercase tracking-[.18em] text-forest">About me section</p>
+            <h2 className="mt-2 text-xl font-bold">About heading and story</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">This content is independent of the homepage hero. Changes here will not replace your main headline or hero introduction.</p>
+          </div>
+
+          <label className="block text-sm font-semibold">
+            About Me heading
+            <input
+              name="about_title"
+              required
+              maxLength={180}
+              defaultValue={profile.about_title ?? 'Curious by nature. Practical by design.'}
+              className={inputClass}
+            />
+          </label>
+
+          <label className="block text-sm font-semibold">
+            About Me description
             <textarea
               name="summary"
+              required
               rows={5}
               maxLength={3000}
-              defaultValue={profile.summary ?? ''}
+              defaultValue={profile.summary ?? 'I build practical AI and machine learning applications, with a focus on generative AI, LLM-powered tools, and turning experiments into useful products.'}
               className={`${inputClass} leading-6`}
             />
           </label>
@@ -193,6 +247,30 @@ export default async function ProfileAdminPage({
             />
           </label>
 
+          <label className="block text-sm font-semibold">
+            Resume Google Drive share link
+            <input
+              name="resume_path"
+              type="url"
+              maxLength={1000}
+              defaultValue={profile.resume_path ?? ''}
+              placeholder="https://drive.google.com/file/d/.../view"
+              className={inputClass}
+            />
+            <span className="mt-2 block text-xs font-normal leading-5 text-slate-500">
+              Paste the share link for your resume PDF. In Google Drive, set General access to “Anyone with the link — Viewer” if visitors should be able to preview and download it. Leave empty to hide the public resume buttons.
+            </span>
+            {profile.resume_path && (
+              <a
+                href={profile.resume_path}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-flex text-xs font-semibold text-forest underline underline-offset-4"
+              >
+                Test current resume link
+              </a>
+            )}
+          </label>
           <div className="border-t border-slate-200 pt-6">
             <p className="text-xs font-bold uppercase tracking-[.18em] text-forest">
               Homepage section

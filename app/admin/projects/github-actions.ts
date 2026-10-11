@@ -1,4 +1,4 @@
-﻿'use server';
+'use server';
 
 import { redirect } from 'next/navigation';
 
@@ -460,7 +460,7 @@ async function generateProjectContent(
 
         ? `${description}\n\nKey highlights:\n${highlights
 
-            .map((item) => `â€¢ ${item}`)
+            .map((item) => `- ${item}`)
 
             .join('\n')}`
 

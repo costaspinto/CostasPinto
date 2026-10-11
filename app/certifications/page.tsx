@@ -5,6 +5,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { getPortfolioData } from '@/lib/data';
+import { BrandMark } from '@/components/brand-mark';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,14 +14,14 @@ export default async function CertificationsPage() {
   const certifications = profile.certifications;
 
   return (
-    <main className="min-h-screen bg-[#f8faf8] text-slate-950">
+    <main className="certifications-page min-h-screen bg-[#f8faf8] text-slate-950">
       <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
           <Link
             href="/"
             className="text-xl font-black tracking-tight transition-colors hover:text-emerald-800"
           >
-            CP<span className="text-emerald-700">.</span>
+            <BrandMark />
           </Link>
 
           <Link
