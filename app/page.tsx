@@ -1109,6 +1109,13 @@ export default async function HomePage() {
 
           <span>Built with curiosity and code.</span>
 
+          <Link
+            href="/admin/login"
+            className="text-xs font-medium text-slate-400 transition-colors hover:text-emerald-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
+          >
+            Admin
+          </Link>
+
         </footer>
 
       </section>
