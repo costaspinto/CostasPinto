@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 import {
@@ -47,6 +48,10 @@ import { BrandMark } from '@/components/brand-mark';
 import { MobileNav } from '@/components/mobile-nav';
 import { YouTubeSection } from '@/components/youtube-section';
 import { getYouTubeVideos } from '@/lib/youtube';
+import { ExpandableText } from '@/components/expandable-text';
+import { AnalyticsTracker } from '@/components/analytics-tracker';
+import { RecommendationsSection } from '@/components/recommendations-section';
+import { getPublicRecommendations } from '@/lib/recommendations';
 
 export const dynamic = 'force-dynamic';
 
@@ -60,7 +65,7 @@ export default async function HomePage() {
 
   ]);
 
-  const youtubeVideos = await getYouTubeVideos();
+  const [youtubeVideos, recommendations] = await Promise.all([getYouTubeVideos(), getPublicRecommendations()]);
 
   return (
 
@@ -118,6 +123,7 @@ export default async function HomePage() {
               </a>
 
             ))}
+            <Link href="/feedback" className="relative py-2 font-semibold text-emerald-700 hover:text-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700">Feedback</Link>
 
           </div>
 
@@ -318,13 +324,19 @@ export default async function HomePage() {
 
               {profile.avatarUrl ? (
 
-                <img
+                <Image
 
                   src={profile.avatarUrl}
 
                   alt={`${profile.name} profile`}
 
-                  className="h-16 w-16 shrink-0 rounded-2xl object-cover ring-4 ring-emerald-50 transition-transform duration-300 hover:scale-105 sm:h-20 sm:w-20"
+                  width={112}
+
+                  height={112}
+
+                  unoptimized
+
+                  className="portfolio-profile-photo h-24 w-24 shrink-0 rounded-[1.65rem] object-cover ring-4 ring-emerald-100 shadow-xl shadow-emerald-950/15 transition-transform duration-300 hover:scale-[1.04] sm:h-28 sm:w-28"
 
                   referrerPolicy="no-referrer"
 
@@ -332,7 +344,7 @@ export default async function HomePage() {
 
               ) : (
 
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-50 text-emerald-900 ring-4 ring-emerald-50 sm:h-20 sm:w-20">
+                <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-[1.65rem] bg-gradient-to-br from-emerald-100 to-teal-50 text-emerald-900 ring-4 ring-emerald-100 shadow-xl shadow-emerald-950/15 sm:h-28 sm:w-28">
 
                   <Sparkles size={27} />
 
@@ -566,11 +578,7 @@ export default async function HomePage() {
 
                 </h3>
 
-                <p className="mt-3 min-h-14 leading-7 text-slate-600">
-
-                  {project.description}
-
-                </p>
+                <ExpandableText text={project.description} className="mt-3 text-slate-600" collapsedClassName="line-clamp-3" />
 
                 {project.stack.length > 0 && (
 
@@ -790,7 +798,7 @@ export default async function HomePage() {
 
               </h3>
 
-              <p className="mt-2 text-slate-600">{item.detail}</p>
+              <ExpandableText text={item.detail} className="mt-2 text-slate-600" collapsedClassName="line-clamp-3" />
 
               <p className="mt-4 text-sm font-medium text-slate-500">
 
@@ -850,11 +858,7 @@ export default async function HomePage() {
 
                   <p className="mt-1 text-slate-600">{item.organization}</p>
 
-                  <p className="mt-4 text-sm leading-7 text-slate-500">
-
-                    {item.description}
-
-                  </p>
+                  <ExpandableText text={item.description} className="mt-4 text-sm leading-7 text-slate-500" collapsedClassName="line-clamp-3" />
 
                 </article>
 
@@ -1120,9 +1124,10 @@ export default async function HomePage() {
 
       </section>
 
+      <RecommendationsSection items={recommendations} />
+      <AnalyticsTracker />
       <ChatWidget />
-
-          <SiteControls />
+      <SiteControls />
     </main>
 
   );

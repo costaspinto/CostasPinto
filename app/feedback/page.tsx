@@ -1,0 +1,5 @@
+import Link from 'next/link';
+import { ArrowLeft, MessageSquareQuote } from 'lucide-react';
+import { FeedbackForm } from '@/components/feedback-form';
+export const metadata={title:'Leave Feedback | Costas Pinto'};
+export default function FeedbackPage(){return <main className="min-h-screen bg-[#f4f7f5] px-4 py-12 text-slate-900 sm:px-8"><div className="mx-auto max-w-2xl"><Link href="/#recommendations" className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-900 hover:underline"><ArrowLeft size={16}/> Back to portfolio</Link><div className="mt-8 flex items-center gap-3 text-emerald-800"><MessageSquareQuote size={20}/><p className="text-xs font-bold uppercase tracking-[.18em]">Feedback</p></div><h1 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">Share your experience</h1><p className="mt-3 text-sm leading-6 text-slate-600">Your feedback helps visitors understand what it is like to work with me. All submissions are reviewed before publication.</p><FeedbackForm/></div></main>}

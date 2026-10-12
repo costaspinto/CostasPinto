@@ -155,7 +155,7 @@ const messages: Record<string, { text: string; success: boolean }> = {
 
 };
 
-async function runAutomaticSelectionAction(_formData: FormData) {
+async function runAutomaticSelectionAction() {
 
   'use server';
 

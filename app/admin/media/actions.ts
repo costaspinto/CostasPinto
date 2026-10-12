@@ -1,0 +1,17 @@
+'use server';
+import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
+import { requireAdmin } from '@/lib/auth/admin';
+import { createAdminClient } from '@/lib/supabase/admin';
+const metaSchema=z.object({project_id:z.string().uuid(),alt_text:z.string().trim().min(3).max(240),caption:z.string().trim().max(300),sort_order:z.coerce.number().int().min(0).max(10000)});
+function isAllowedImage(bytes:Uint8Array,type:string){if(type==='image/jpeg')return bytes[0]===0xff&&bytes[1]===0xd8&&bytes[2]===0xff;if(type==='image/png')return bytes.slice(0,8).join(',')==='137,80,78,71,13,10,26,10';if(type==='image/webp')return String.fromCharCode(...bytes.slice(0,4))==='RIFF'&&String.fromCharCode(...bytes.slice(8,12))==='WEBP';if(type==='image/avif')return String.fromCharCode(...bytes.slice(4,12)).includes('ftypavif')||String.fromCharCode(...bytes.slice(4,12)).includes('ftypavis');return false;}
+export async function uploadProjectMedia(formData:FormData){
+ await requireAdmin();const parsed=metaSchema.safeParse(Object.fromEntries(formData.entries()));const file=formData.get('image');if(!parsed.success||!(file instanceof File)||file.size<1||file.size>5*1024*1024)throw new Error('Check the project, alt text, and image size (max 5 MB).');
+ const allowed=['image/jpeg','image/png','image/webp','image/avif'];if(!allowed.includes(file.type))throw new Error('Only JPEG, PNG, WebP and AVIF images are accepted.');const bytes=new Uint8Array(await file.arrayBuffer());if(!isAllowedImage(bytes,file.type))throw new Error('File content does not match an allowed image format.');
+ const db=createAdminClient();const {data:project,error:projectError}=await db.from('projects').select('id,slug').eq('id',parsed.data.project_id).maybeSingle();if(projectError||!project)throw new Error('Project was not found.');
+ const ext:Record<string,string>={'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/avif':'avif'};const path=`${project.id}/${crypto.randomUUID()}.${ext[file.type]}`;
+ const {error:uploadError}=await db.storage.from('portfolio-project-media').upload(path,bytes,{contentType:file.type,upsert:false,cacheControl:'3600'});if(uploadError)throw new Error('Storage upload failed. Apply the migration and verify the bucket exists.');
+ const {error:insertError}=await db.from('project_media').insert({project_id:project.id,storage_path:path,alt_text:parsed.data.alt_text,caption:parsed.data.caption,sort_order:parsed.data.sort_order});if(insertError){await db.storage.from('portfolio-project-media').remove([path]);throw new Error('Media metadata could not be saved; uploaded file was cleaned up.');}
+ revalidatePath('/admin/media');revalidatePath(`/projects/${project.slug}`);revalidatePath('/');
+}
+export async function deleteProjectMedia(formData:FormData){await requireAdmin();const id=z.string().uuid().safeParse(formData.get('id'));if(!id.success)throw new Error('Invalid media ID.');const db=createAdminClient();const {data,error}=await db.from('project_media').select('id,project_id,storage_path').eq('id',id.data).maybeSingle();if(error||!data)throw new Error('Media not found.');const {error:removeError}=await db.storage.from('portfolio-project-media').remove([data.storage_path]);if(removeError)throw new Error('Could not delete the stored image.');const {error:deleteError}=await db.from('project_media').delete().eq('id',id.data);if(deleteError)throw new Error('Image removed from storage but metadata deletion failed; retry cleanup.');revalidatePath('/admin/media');revalidatePath('/');}

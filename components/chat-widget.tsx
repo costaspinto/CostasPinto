@@ -95,6 +95,17 @@ export function ChatWidget() {
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
+  const [welcomeVisible, setWelcomeVisible] = useState(false);
+
+  useEffect(() => {
+    try {
+      const key = 'costas-portfolio-welcomed-v1';
+      if (!window.localStorage.getItem(key)) {
+        setWelcomeVisible(true);
+        window.localStorage.setItem(key, '1');
+      }
+    } catch { /* Storage may be disabled; chatbot remains available. */ }
+  }, []);
   const conversationEndRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -163,6 +174,13 @@ export function ChatWidget() {
 
   return (
     <>
+      {!open && welcomeVisible && (
+        <button type="button" onClick={() => { setOpen(true); setWelcomeVisible(false); }} className="chat-welcome-nudge fixed bottom-24 right-3 z-[190] max-w-[min(320px,calc(100vw-1.5rem))] rounded-2xl border border-emerald-200 bg-white p-4 text-left text-sm text-slate-700 shadow-xl sm:right-5" aria-label="Open portfolio assistant welcome message">
+          <span className="block font-bold text-emerald-950">Welcome to my portfolio!</span>
+          <span className="mt-1 block leading-6">I’m the AI assistant. Ask me about projects, skills, and experience.</span>
+          <span className="mt-2 block text-xs font-bold text-emerald-800">Chat with me ↗</span>
+        </button>
+      )}
       {open && (
         <section
           id="costas-ai-chat"
