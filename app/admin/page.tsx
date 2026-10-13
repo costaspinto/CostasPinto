@@ -106,8 +106,6 @@ export default async function AdminPage() {
     console.error('Could not load admin dashboard counts:', error);
 
   }
-
-  const appearanceShortcut = <Link href="/admin/appearance" className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-4 py-3 text-sm font-bold text-emerald-950 shadow-sm hover:bg-emerald-50"> <Settings2 size={16} /> Site appearance </Link>;
   const analyticsShortcut = <Link href="/admin/analytics" className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-4 py-3 text-sm font-bold text-emerald-950 shadow-sm hover:bg-emerald-50"> <Settings2 size={16} /> Visitor analytics </Link>;
   const recommendationsShortcut = <Link href="/admin/recommendations" className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-4 py-3 text-sm font-bold text-emerald-950 shadow-sm hover:bg-emerald-50"> <Settings2 size={16} /> Review recommendations </Link>;
 
@@ -389,7 +387,7 @@ export default async function AdminPage() {
 
         </header>
 
-        <div className="mt-6 flex flex-wrap gap-3">{appearanceShortcut}{analyticsShortcut}{recommendationsShortcut}</div>
+        <div className="mt-6 flex flex-wrap gap-3">{analyticsShortcut}{recommendationsShortcut}</div>
 
         <section
 
