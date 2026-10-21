@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { createPortal } from 'react-dom';
 import { useEffect, useRef, useState } from 'react';
@@ -112,7 +112,7 @@ export function MobileNav() {
               ref={index === 0 ? firstLinkRef : undefined}
               href={href}
               onClick={closeMenu}
-              className={href === '#contact' ? 'mobile-nav-link mobile-nav-link--contact' : 'mobile-nav-link'}
+              className="mobile-nav-link"
             >
               <span className="mobile-nav-link__number">{String(index + 1).padStart(2, '0')}</span>
               <span className="mobile-nav-link__label">{label}</span>
@@ -121,7 +121,7 @@ export function MobileNav() {
           ))}
         </div>
         <div className="mobile-nav-panel__footer">
-          <span>AI · Machine Learning · Generative AI</span>
+          <span>AI Â· Machine Learning Â· Generative AI</span>
           <span className="mobile-nav-status"><span /> Portfolio online</span>
         </div>
       </nav>
@@ -147,3 +147,4 @@ export function MobileNav() {
     </div>
   );
 }
+

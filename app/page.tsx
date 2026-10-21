@@ -1,4 +1,4 @@
-import Image from 'next/image';
+﻿import Image from 'next/image';
 import Link from 'next/link';
 
 import {
@@ -838,11 +838,11 @@ export default async function HomePage() {
 
             <div className="mt-10 grid gap-4 md:grid-cols-2">
 
-              {profile.experience.map((item) => (
+              {profile.experience.map((item, index) => (
 
                 <article
 
-                  key={`${item.organization}-${item.role}`}
+                  key={`${item.organization}-${item.role}-${index}`}
 
                   className="rounded-2xl border border-slate-200 bg-[#f8faf8] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:bg-white hover:shadow-lg"
 
@@ -926,7 +926,7 @@ export default async function HomePage() {
 
                   {item.issuer}
 
-                  {item.issuedAt ? ` · ${item.issuedAt.slice(0, 4)}` : ''}
+                  {item.issuedAt ? ` Â· ${item.issuedAt.slice(0, 4)}` : ''}
 
                 </p>
 
@@ -1093,7 +1093,7 @@ export default async function HomePage() {
 
           <span>
 
-            © {new Date().getFullYear()} {profile.name}
+            Â© {new Date().getFullYear()} {profile.name}
 
           </span>
 
@@ -1133,3 +1133,4 @@ export default async function HomePage() {
   );
 
 }
+
