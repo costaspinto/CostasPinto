@@ -1,43 +1,35 @@
-name: Generate contribution snake
+name: Generate Contribution Snake
 
 on:
-  # Refresh the animation every day.
   schedule:
     - cron: "0 0 * * *"
-
-  # Allow a manual run from the Actions tab.
   workflow_dispatch:
-
-  # Generate the animation when the profile README or workflow changes.
   push:
     branches:
       - main
-    paths:
-      - "README.md"
-      - ".github/workflows/generate-snake.yml"
-
-permissions:
-  contents: write
 
 concurrency:
-  group: generate-contribution-snake
+  group: contribution-snake
   cancel-in-progress: true
 
 jobs:
   generate:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: write
 
     steps:
-      - name: Generate light and dark contribution animations
-        uses: Platane/snk/svg-only@v3
+      - name: Generate contribution snake (GIF and SVG)
+        uses: Platane/snk@v3
         with:
           github_user_name: costaspinto
           outputs: |
-            dist/github-snake.svg?palette=github-light
+            dist/github-snake.gif
+            dist/github-snake.svg
             dist/github-snake-dark.svg?palette=github-dark
 
-      - name: Publish animations to the output branch
+      - name: Publish generated files to output branch
         uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
           target_branch: output
