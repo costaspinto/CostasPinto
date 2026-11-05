@@ -121,7 +121,7 @@ export function MobileNav() {
           ))}
         </div>
         <div className="mobile-nav-panel__footer">
-          <span>AI Â· Machine Learning Â· Generative AI</span>
+          <span>AI· Machine Learning· Generative AI</span>
           <span className="mobile-nav-status"><span /> Portfolio online</span>
         </div>
       </nav>
