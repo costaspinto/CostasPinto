@@ -926,7 +926,7 @@ export default async function HomePage() {
 
                   {item.issuer}
 
-                  {item.issuedAt ? ` Â· ${item.issuedAt.slice(0, 4)}` : ''}
+                  {item.issuedAt ? ` · ${item.issuedAt.slice(0, 4)}` : ''}
 
                 </p>
 
@@ -1093,7 +1093,7 @@ export default async function HomePage() {
 
           <span>
 
-            Â© {new Date().getFullYear()} {profile.name}
+            © {new Date().getFullYear()} {profile.name}
 
           </span>
 
